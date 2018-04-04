@@ -65,10 +65,10 @@ data "aws_iam_policy_document" "assume_policy_document" {
 
     condition {
       test     = "NumericLessThan"
-      variable = "aws:MultiFactorAuthAge"
+      variable = "aws:DurationSeconds"
 
       values = [
-        "43200",
+        "28800",
       ]
     }
   }

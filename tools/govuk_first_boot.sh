@@ -48,11 +48,13 @@ if [[ -e ${GOVUK_WORKDIR}/FIRST_BOOT ]]
     GPG_2_OF_2=$(${AWS_BINARY} --region=${AWS_REGION} ssm get-parameter --name "govuk_staging_secrets_2_of_2_gpg" --with-decryption \
     | jq .Parameter.Value | sed -e "s/^\"//;s/\"$//")
 
-    echo "-----BEGIN PGP PRIVATE KEY BLOCK-----" >${GPG_KEYSTORE}/${GPG_KEYNAME}
-    echo "Version: GnuPG v1.4.11 (GNU/Linux)" >>${GPG_KEYSTORE}/${GPG_KEYNAME}
-    echo "" >>${GPG_KEYSTORE}/${GPG_KEYNAME}
-    echo ${GPG_1_OF_2}${GPG_2_OF_2}|sed -e s/' '/'\n'/g >>${GPG_KEYSTORE}/${GPG_KEYNAME}
-    echo "-----END PGP PRIVATE KEY BLOCK-----" >>${GPG_KEYSTORE}/${GPG_KEYNAME}
+    {
+    echo "-----BEGIN PGP PRIVATE KEY BLOCK-----";
+    echo "Version: GnuPG v1.4.11 (GNU/Linux)";
+    echo "";
+    echo ${GPG_1_OF_2}${GPG_2_OF_2}|sed -e s/' '/'\n'/g;
+    echo "-----END PGP PRIVATE KEY BLOCK-----";
+    } >>${GPG_KEYSTORE}/${GPG_KEYNAME}
 
     chmod u+x ${GOVUK_WORKDIR}/govuk-aws/tools/govuk_puppetmaster_bootstrap.sh
     ${GOVUK_WORKDIR}/govuk-aws/tools/govuk_puppetmaster_bootstrap.sh
